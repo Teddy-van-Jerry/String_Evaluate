@@ -4,13 +4,15 @@
  * Description: A console app for calculating complex number
  * ---------------------------
  *
- * @author: Teddy van Jerry
+ * @author: Teddy van Jerry, Pulkit Mittal
  * @licence: MIT Licence
  * @compiler: At least C++11
  *
  * @version 1.0: 2021/07/05
  * - initial version
  *
+ * @version 1.1: 2021/07/08
+ * - add bracket check
  */
 
 /****************************************
@@ -49,7 +51,9 @@ int main(int argc, char* argv[]) {
 	string msg;
 	// eval with variables 'x' and 'y'
 	cout << eval("log(-2) * i + 2 $x ^ ($y - 1)", { "x", "y" }, { Comp(1, 2), Comp(3, 4) }, &msg) << endl;
+	cout << eval("$x + $y", { "x", "y" }, { Comp(1, 2), Comp(2, 3) }) << endl;
 	cout << eval("-arcsin(2-i)") << endl;
-	cout << eval("abs(3 + 4i)") << endl;
+	// Mismatch of brackets error example
+	cout << eval("3 * (2+3]") << endl;
 	return 0;
 }

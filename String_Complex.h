@@ -4,12 +4,15 @@
  * Description: calculate std::string and return std::complex
  * ---------------------------
  * 
- * @author: Teddy van Jerry
+ * @author: Teddy van Jerry, Pulkit Mittal
  * @licence: MIT Licence
  * @compiler: At least C++11
  * 
  * @version 1.0: 2021/07/05
  * - initial version
+ * 
+ * @version 1.1: 2021/07/08
+ * - add bracket check
  * 
  */
 
@@ -25,7 +28,7 @@ static const std::vector<std::complex<double>> empty_complex_list_; // an empty 
 static constexpr std::complex<double> ERROR_COMPLEX { 0, 0 };       // complex of error result
 static constexpr std::complex<double> IMAG_I{ 0, 1 };               // the imaginary unit
 
-bool bracket(std:: string s);										//Checking for anomalies
+bool bracket(const std::string&);                                   // Checking for anomalies
 
 // If it is defined, error information will be printed.
 #define COMPLEX_CERR_ERROR_
@@ -460,6 +463,11 @@ std::complex<double> eval(std::string str,
 			return ERROR_COMPLEX;
 		}
 	}
+	if (!bracket(str)) {
+		// error handling
+		error_msg(msg, "Mismatch of brackets");
+		return ERROR_COMPLEX;
+	}
 	if (!pre_edit(str)) {
 		// error handling
 		return ERROR_COMPLEX;
@@ -481,7 +489,7 @@ std::complex<double> eval(std::string str,
 			if ((*iter).str.length() > 1) {
 				// function
 				if (s.size() < 1) {
-					error_msg(msg, "More operators or functions, or less numbers than expected");
+					error_msg(msg, "More operators or functions, or fewer numbers than expected");
 					return ERROR_COMPLEX;
 				}
 				auto num = s.top().num;
@@ -492,7 +500,7 @@ std::complex<double> eval(std::string str,
 			else {
 				// operator
 				if (s.size() < 2) {
-					error_msg(msg, "More operators or functions, or less numbers than expected");
+					error_msg(msg, "More operators or functions, or fewer numbers than expected");
 					return ERROR_COMPLEX;
 				}
 				auto num2 = s.top().num;
@@ -529,61 +537,58 @@ std::complex<double> eval(std::string str,
 		return s.top().num;
 	}
 	else if (s.size() == 0) {
-		error_msg(msg, "More operators or functions, or less numbers than expected");
+		error_msg(msg, "More operators or functions, or fewer numbers than expected");
 		return ERROR_COMPLEX;
 	}
 	else {
-		error_msg(msg, "Less operators or functions, or more numbers than expected");
+		error_msg(msg, "Fewer operators or functions, or fewer numbers than expected");
 		return ERROR_COMPLEX;
 	}
 }
 //Function definition
-bool bracket(std::string expr)
+bool bracket(const std::string& expr)
 { 
     std::stack<char> s;
     char x;
  
-    for (int i = 0; i < expr.length(); i++)
-    {
-        if (expr[i] == '(' || expr[i] == '['
-            || expr[i] == '{')
-        {
+    for (size_t i = 0; i != expr.length(); i++) {
+        if (expr[i] == '(' || expr[i] == '[' || expr[i] == '{') {
             s.push(expr[i]);
             continue;
         }
-		if (s.empty())
-            return false;
+		if (expr[i] != ')' && expr[i] && ']' && expr[i] != '}') {
+			continue;
+		}
+		else if (s.empty()) {
+			return false;
+		}
  
         switch (expr[i]) {
         case ')':
-             
-            
             x = s.top();
             s.pop();
-            if (x == '{' || x == '[')
-                return false;
+			if (x == '{' || x == '[') {
+				return false;
+			}
             break;
  
-        case '}':
- 
-            
+		case '}':
             x = s.top();
             s.pop();
-            if (x == '(' || x == '[')
-                return false;
+			if (x == '(' || x == '[') {
+				return false;
+			}
             break;
  
-        case ']':
- 
-            
+        case ']':      
             x = s.top();
             s.pop();
-            if (x == '(' || x == '{')
-                return false;
+			if (x == '(' || x == '{') {
+				return false;
+			}
             break;
         }
     }
- 
-    
+
     return (s.empty());
 }
