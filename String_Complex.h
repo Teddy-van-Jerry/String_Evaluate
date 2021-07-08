@@ -538,50 +538,52 @@ std::complex<double> eval(std::string str,
 	}
 }
 //Function definition
-bool bracket(std:: string s)
-{
-	std::stack<char> check;
-	char c;
-	for(int i=0;i<s.length();i++)
-	{
-		if(s[i]=='(' || s[i]=='{' || s[i]=='[')
-		{
-			check.push(s[i]);
-			continue;
-		}
-		if (check.empty())
+bool bracket(std::string expr)
+{ 
+    std::stack<char> s;
+    char x;
+ 
+    for (int i = 0; i < expr.length(); i++)
+    {
+        if (expr[i] == '(' || expr[i] == '['
+            || expr[i] == '{')
+        {
+            s.push(expr[i]);
+            continue;
+        }
+		if (s.empty())
             return false;
-
-		switch(s[i])
-		{
-			case ')':
-			c=check.top();
-			check.pop();
-			if (c == '{' || c == '[')
+ 
+        switch (expr[i]) {
+        case ')':
+             
+            
+            x = s.top();
+            s.pop();
+            if (x == '{' || x == '[')
                 return false;
             break;
-
-			case '}':
  
-            // Store the top element in b
-            c = check.top();
-            check.pop();
-            if (c == '(' || c == '[')
+        case '}':
+ 
+            
+            x = s.top();
+            s.pop();
+            if (x == '(' || x == '[')
                 return false;
             break;
  
         case ']':
  
-            // Store the top element in c
-            c = check.top();
-            check.pop();
-            if (c == '(' || c == '{')
+            
+            x = s.top();
+            s.pop();
+            if (x == '(' || x == '{')
                 return false;
             break;
-		}
-
-		return (check.empty());
-
-	}
-
+        }
+    }
+ 
+    
+    return (s.empty());
 }
