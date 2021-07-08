@@ -25,6 +25,8 @@ static const std::vector<std::complex<double>> empty_complex_list_; // an empty 
 static constexpr std::complex<double> ERROR_COMPLEX { 0, 0 };       // complex of error result
 static constexpr std::complex<double> IMAG_I{ 0, 1 };               // the imaginary unit
 
+bool bracket(std:: string s);										//Checking for anomalies
+
 // If it is defined, error information will be printed.
 #define COMPLEX_CERR_ERROR_
 
@@ -534,4 +536,54 @@ std::complex<double> eval(std::string str,
 		error_msg(msg, "Less operators or functions, or more numbers than expected");
 		return ERROR_COMPLEX;
 	}
+}
+//Function definition
+bool bracket(std::string expr)
+{ 
+    std::stack<char> s;
+    char x;
+ 
+    for (int i = 0; i < expr.length(); i++)
+    {
+        if (expr[i] == '(' || expr[i] == '['
+            || expr[i] == '{')
+        {
+            s.push(expr[i]);
+            continue;
+        }
+		if (s.empty())
+            return false;
+ 
+        switch (expr[i]) {
+        case ')':
+             
+            
+            x = s.top();
+            s.pop();
+            if (x == '{' || x == '[')
+                return false;
+            break;
+ 
+        case '}':
+ 
+            
+            x = s.top();
+            s.pop();
+            if (x == '(' || x == '[')
+                return false;
+            break;
+ 
+        case ']':
+ 
+            
+            x = s.top();
+            s.pop();
+            if (x == '(' || x == '{')
+                return false;
+            break;
+        }
+    }
+ 
+    
+    return (s.empty());
 }
