@@ -1,5 +1,5 @@
 /*
- * Project: String_Complex
+ * Project: String_Evaluate
  * File: Console_Calculator.cpp
  * Description: A console app for calculating complex number
  * ---------------------------
@@ -13,17 +13,15 @@
  *
  * @version 1.1: 2021/07/08
  * - add bracket check
+ * 
+ * @version 1.2: 2021/07/09
+ * - break the function eval_postorder
+ * - break into header and source files
+ * 
  */
 
-/****************************************
- * NOTICE:
- * The app has not been fully developed,
- * currently it serves as the test file
- * of String_Complex.h.
- ****************************************/
-
 #include <iostream>
-#include "String_Complex.h"
+#include "String_Evaluate.h"
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -50,10 +48,10 @@ int main(int argc, char* argv[]) {
 
 	string msg;
 	// eval with variables 'x' and 'y'
-	cout << eval("log(-2) * i + 2 $x ^ ($y - 1)", { "x", "y" }, { Comp(1, 2), Comp(3, 4) }, &msg) << endl;
-	cout << eval("$x + $y", { "x", "y" }, { Comp(1, 2), Comp(2, 3) }) << endl;
-	cout << eval("-arcsin(2-i)") << endl;
+	cout << eval("log(-2) * i + 2 $x ^ ($y - 1)", { "x", "y" }, { { 1, 2 }, { 3, 4 } }, &msg) << endl;
+	cout << eval("$x + $y", { "x", "y" }, { { 1, 2 }, { 2, 3 } }) << endl;
+	cout << eval("-arcsin(2 - i)") << endl;
 	// Mismatch of brackets error example
-	cout << eval("3 * (2+3]") << endl;
+	cout << eval("3 * ( 2 + 3 ]") << endl;
 	return 0;
 }
